@@ -13,14 +13,15 @@ namespace cw3.Controllers
     [Route("api/students")]
     public class StudentsController : ControllerBase
     {
+        /*
         private const string ConString = "Data Source=db-mssql;Initial Catalog=s18996; Integrated Security=True";
-
+        
         private IStudentDal _dbService;
         public StudentsController(IStudentDal dbService)
         {
             _dbService = dbService;
         }
-
+        
         [HttpGet]
         public IActionResult GetStudents([FromServices]IStudentDal dbService)
         {
@@ -36,11 +37,11 @@ namespace cw3.Controllers
                 while (dr.Read())
                 {
                     var st = new Student();
-                    st.IndexNumber = dr["IndexNumber"].ToString();
+                    st.IndexNumber = (int)dr["IndexNumber"];
                     st.FirstName = dr["FirstName"].ToString();
                     st.LastName = dr["LastName"].ToString();
-                    st.BirthDate = dr["BirthDate"].ToString();
-                    st.IdEnrollment = dr["IdEnrollment"].ToString();
+                    //st.BirthDate = dr["BirthDate"].ToString();
+                    //st.IdEnrollment = dr["IdEnrollment"].ToString();
                     list.Add(st);
                 }
 
@@ -64,11 +65,11 @@ namespace cw3.Controllers
                 if (dr.Read())
                 {
                     var st = new Student();
-                    st.IndexNumber = dr["IndexNumber"].ToString();
+                    st.IndexNumber = (int)dr["IndexNumber"];
                     st.FirstName = dr["FirstName"].ToString();
                     st.LastName = dr["LastName"].ToString();
-                    st.BirthDate = dr["BirthDate"].ToString();
-                    st.IdEnrollment = dr["IdEnrollment"].ToString();
+                    //st.BirthDate = dr["BirthDate"].ToString();
+                    //st.IdEnrollment = dr["IdEnrollment"].ToString();
                     return Ok(st);
                 }
             }
@@ -78,7 +79,7 @@ namespace cw3.Controllers
         [HttpPost]
         public IActionResult CreateStudent(Student student)
         {
-            student.IndexNumber = $"s{new Random().Next(1, 20000)}";
+            student.IndexNumber = new Random().Next(1, 20000);
             return Ok(student);
         }
 
@@ -93,5 +94,6 @@ namespace cw3.Controllers
         {
             return Ok("Aktualizacja dokończona");
         }
+        */
     }
 }
