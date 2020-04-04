@@ -25,14 +25,17 @@ namespace cw3.Controllers
         [HttpPost]
         public IActionResult EnrollNewStudent(EnrollStudentRequest req)
         {
-            var tmp = _service.EnrollStudent(req).Semester;
-            if (tmp != 0)
-                return Created("Created student on semester: ", tmp);
+            var tmp = _service.EnrollStudent(req);
+            int sem = 0;
+            if (tmp == null)
+                return BadRequest();
+            if (sem != 0)
+                return Created("Created student on semester: ", sem);
             return BadRequest();
         }
 
         [HttpPost]
-        [Route("/promotions")]
+        [Route("promotions")]
         public IActionResult PromoteAllStudents(PromoteStudentsRequest req)
         {
             var tmp = _service.PromoteStudents(req);

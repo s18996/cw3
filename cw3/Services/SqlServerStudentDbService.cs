@@ -18,9 +18,10 @@ namespace cw3.Services
             using(var con = new SqlConnection(ConString))
             using(var com = new SqlCommand())
             {
-                com.Connection = con;
                 con.Open();
+                com.Connection = con;
                 var tran = con.BeginTransaction();
+                com.Transaction = tran;
                 try
                 {
                     /*
@@ -43,6 +44,7 @@ namespace cw3.Services
                         tran.Rollback();
                         return null;
                     }
+                    
                     com.CommandText = "select * from Enrollment where IdStudy=(select IdStudy from studies where name=@name AND semester=1)";
                     com.Parameters.AddWithValue("name", request.Studies);
                     dr = com.ExecuteReader();
@@ -81,6 +83,7 @@ namespace cw3.Services
                     var st = new Student();
                     st.enrollment = enrollment;
                     tran.Commit();
+                    tran.Dispose();
                     return st.enrollment;
                     
                 }catch(SqlException exc)
@@ -99,6 +102,7 @@ namespace cw3.Services
                 com.Connection = con;
                 con.Open();
                 var tran = con.BeginTransaction();
+                com.Transaction = tran;
                 try
                 {
                     com.CommandText = "exec PromoteStudents @Studies, @Semester";
@@ -118,6 +122,7 @@ namespace cw3.Services
                         enrollment.IdEnrollment = (int)dr["IdEnrollment"];
                         enrollment.IdStudy = (int)dr["IdStudy"];
                         enrollment.StartDate = (DateTime)dr["StartDate"];
+                        //tran.Dispose();
                         return enrollment;
                     }
                 }
