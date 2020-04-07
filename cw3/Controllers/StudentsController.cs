@@ -13,15 +13,25 @@ namespace cw3.Controllers
     [Route("api/students")]
     public class StudentsController : ControllerBase
     {
-        /*
-        private const string ConString = "Data Source=db-mssql;Initial Catalog=s18996; Integrated Security=True";
         
-        private IStudentDal _dbService;
-        public StudentsController(IStudentDal dbService)
+        private const string ConString = "Data Source=db-mssql;Initial Catalog=s18996; Integrated Security=True";
+
+        private IStudentDbService _dbService;
+        public StudentsController(IStudentDbService dbService)
         {
             _dbService = dbService;
         }
-        
+
+        [HttpGet]
+        public IActionResult GetStudents()
+        {
+            var tmp = _dbService.GetStudents();
+            if (tmp == null)
+                return BadRequest();
+            return Ok(tmp);
+        }
+
+        /*
         [HttpGet]
         public IActionResult GetStudents([FromServices]IStudentDal dbService)
         {

@@ -7,11 +7,11 @@ namespace cw3.Models
 {
     public class Student
     {
-        public int IndexNumber { get; set; }
+        public string Index { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
-        public Enrollment enrollment { get; set; }
+        public Enrollment Enrollment { get; set; }
 
     }
 }

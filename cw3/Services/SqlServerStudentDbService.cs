@@ -13,6 +13,56 @@ namespace cw3.Services
     public class SqlServerStudentDbService : IStudentDbService
     {
         private const string ConString = "Data Source=db-mssql;Initial Catalog=s18996; Integrated Security=True";
+
+        public Student GetStudent(string index)
+        {
+            using (var con = new SqlConnection(ConString))
+            using (var com = new SqlCommand())
+            {
+                con.Open();
+                com.Connection = con;
+                com.CommandText = "select * from student where indexNumber = @indexNumber";
+                com.Parameters.AddWithValue("indexNumber", index);
+
+                var dr = com.ExecuteReader();
+                if (!dr.Read())
+                {
+                    return null;
+                }
+                var st = new Student();
+                st.Index = dr["IndexNumber"].ToString();
+                st.FirstName = dr["FirstName"].ToString();
+                st.LastName = dr["LastName"].ToString();
+
+                return st;
+            }
+        }
+
+        public IEnumerable<Student> GetStudents()
+        {
+            using (var con = new SqlConnection(ConString))
+            using (var com = new SqlCommand())
+            {
+                con.Open();
+                com.Connection = con;
+                com.CommandText = "select * from student";
+
+                var list = new List<Student>();
+                var dr = com.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    var st = new Student();
+                    st.Index = dr["IndexNumber"].ToString();
+                    st.FirstName = dr["FirstName"].ToString();
+                    st.LastName = dr["LastName"].ToString();
+                    st.BirthDate = (DateTime)dr["BirthDate"];
+                    list.Add(st);
+                }
+                return list;
+            }
+        }
+
         public Enrollment EnrollStudent(EnrollStudentRequest request)
         {
             using(var con = new SqlConnection(ConString))
@@ -81,10 +131,10 @@ namespace cw3.Services
                     enrollment.IdStudy = (int)dr["IdStudy"];
                     enrollment.StartDate = (DateTime)dr["StartDate"];
                     var st = new Student();
-                    st.enrollment = enrollment;
+                    st.Enrollment = enrollment;
                     tran.Commit();
-                    tran.Dispose();
-                    return st.enrollment;
+                    //tran.Dispose();
+                    return st.Enrollment;
                     
                 }catch(SqlException exc)
                 {
