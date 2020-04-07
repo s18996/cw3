@@ -33,8 +33,11 @@ namespace cw3.Middlewares
                     context.Request.Body.Position = 0;
                 }
                 string[] lines = { method, path, bodyStr, queryString};
-                string solutionPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
-                using (var writer = new StreamWriter(Path.Combine(solutionPath, "requestsLog.txt")))
+                string dirPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
+                string logPath = dirPath + "/requestsLog.txt";
+                if (!File.Exists(logPath))
+                    File.CreateText(logPath);
+                using (var writer = File.AppendText(logPath))
                 {
                     foreach (string s in lines)
                     {

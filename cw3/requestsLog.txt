@@ -3,3 +3,7 @@ GET
 {
 	"index": "101"
 }
+GET
+/api/students
+GET
+/api/students
