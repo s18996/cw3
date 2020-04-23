@@ -6,6 +6,7 @@ using cw3.DTOs.Requests;
 using cw3.DTOs.Responses;
 using cw3.Models;
 using cw3.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +24,7 @@ namespace cw3.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Employee")]
         public IActionResult EnrollNewStudent(EnrollStudentRequest req)
         {
             var tmp = _service.EnrollStudent(req);
@@ -35,6 +37,7 @@ namespace cw3.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Employee")]
         [Route("promotions")]
         public IActionResult PromoteAllStudents(PromoteStudentsRequest req)
         {

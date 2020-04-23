@@ -14,6 +14,105 @@ namespace cw3.Services
     {
         private const string ConString = "Data Source=db-mssql;Initial Catalog=s18996; Integrated Security=True";
 
+        public bool IsLoginCorrect(LoginRequest request)
+        {
+            using (var con = new SqlConnection(ConString))
+            using (var com = new SqlCommand())
+            {
+                con.Open();
+                com.Connection = con;
+                com.CommandText = "select * from student where indexNumber = @indexNumber AND password = @password";
+                com.Parameters.AddWithValue("indexNumber", request.Login);
+                com.Parameters.AddWithValue("password", request.Password);
+                var dr = com.ExecuteReader();
+                if (!dr.Read())
+                    return false;
+                return true;
+            }
+        }
+        public void AddTokenToDB(string token, string index)
+        {
+            using (var con = new SqlConnection(ConString))
+            using (var com = new SqlCommand())
+            {
+                con.Open();
+                com.Connection = con;
+                com.CommandText = "UPDATE Student SET refToken = @token where index = @index";
+                com.Parameters.AddWithValue("token", token);
+                com.Parameters.AddWithValue("index", index);
+                var dr = com.ExecuteNonQuery();
+            }
+        }
+
+        public bool IsRefTokenInDB(string token)
+        {
+            using (var con = new SqlConnection(ConString))
+            using (var com = new SqlCommand())
+            {
+                con.Open();
+                com.Connection = con;
+                com.CommandText = "select * from student where refToken = @token";
+                com.Parameters.AddWithValue("token", token);
+                var dr = com.ExecuteReader();
+                if (!dr.Read())
+                    return false;
+                return true;
+            }
+        }
+
+        public void UpdateTokenInDB(string oldToken, string newToken)
+        {
+            using (var con = new SqlConnection(ConString))
+            using (var com = new SqlCommand())
+            {
+                con.Open();
+                com.Connection = con;
+                com.CommandText = "UPDATE Student SET token=@newToken where refToken = @oldRefToken";
+                com.Parameters.AddWithValue("oldRefToken", oldToken);
+                com.Parameters.AddWithValue("newRefToken", newToken);
+                var dr = com.ExecuteNonQuery();
+            }
+        }
+        public string getSaltFromDB(string index)
+        {
+            using (var con = new SqlConnection(ConString))
+            using (var com = new SqlCommand())
+            {
+                con.Open();
+                com.Connection = con;
+                com.CommandText = "Select salt from student where index=@index";
+                com.Parameters.AddWithValue("index", index);
+                var dr = com.ExecuteReader();
+                if (!dr.Read())
+                    return string.Empty;
+                return dr.ToString();
+            }
+        }
+
+        public Student GetStudentWithToken(string refreshToken)
+        {
+            using (var con = new SqlConnection(ConString))
+            using (var com = new SqlCommand())
+            {
+                con.Open();
+                com.Connection = con;
+                com.CommandText = "select * from student where token = @refreshToken";
+                com.Parameters.AddWithValue("refreshToken", refreshToken);
+
+                var dr = com.ExecuteReader();
+                if (!dr.Read())
+                {
+                    return null;
+                }
+                var st = new Student();
+                st.Index = dr["IndexNumber"].ToString();
+                st.FirstName = dr["FirstName"].ToString();
+                st.LastName = dr["LastName"].ToString();
+
+                return st;
+            }
+        }
+
         public Student GetStudent(string index)
         {
             using (var con = new SqlConnection(ConString))
